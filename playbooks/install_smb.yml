@@ -1,0 +1,21 @@
+- name: Install smb on all servers
+  hosts: smbservers
+
+  tasks:
+    - name: Install smb on CentOS
+      ansible.builtin.yum:
+        name: smb
+        state: latest
+        when: ansible_distribution == 'CentOS'
+
+    - name: Install smb on Debian/Ubuntu
+      ansible.builtin.apt:
+        name: smb
+        state: latest
+        when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+    
+    - name: Install smb on RHEL/Fedora
+      ansible.builtin.dnf:
+        name: smb
+        state: latest
+        when: ansible_distribution == 'Fedora' or ansible_distribution == 'RedHat' 

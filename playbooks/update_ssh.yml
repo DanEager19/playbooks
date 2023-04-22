@@ -1,0 +1,28 @@
+- name: Update ssh config on servers
+  hosts: servers
+
+  tasks:
+    - name: Update cache on CentOS
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+        when: ansible_distribution == 'CentOS'
+
+    - name: Update cache on Debian/Ubuntu
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
+        when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+    
+    - name: Update cache on RHEL/Fedora
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        when: ansible_distribution == 'Fedora' or ansible_distribution == 'RedHat' 
+
+    
+    - name: Write the config file
+      ansible.builtin.template:
+        src: /srv/ssh.j2
+        dest: /etc/ssh/sshd_config
+
